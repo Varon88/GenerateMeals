@@ -18,4 +18,5 @@ public class BreakFast {
     private Integer id;
     private String name;
     private String type;
+
 }

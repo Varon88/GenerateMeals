@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface BreakFastdao extends JpaRepository<BreakFast, Integer> {
-    List<BreakFast> findbyType(String veg);
+    List<BreakFast> findByType(String type);
 }

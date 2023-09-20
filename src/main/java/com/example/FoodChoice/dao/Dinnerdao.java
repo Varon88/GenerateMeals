@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface Dinnerdao extends JpaRepository<Dinner, Integer> {
-    List<Dinner> findByType(String veg);
+    List<Dinner> findByType(String type);
 }

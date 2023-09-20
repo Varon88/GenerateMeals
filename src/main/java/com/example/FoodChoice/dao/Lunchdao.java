@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface Lunchdao extends JpaRepository<Lunch,Integer> {
-    List<Lunch> findByType(String veg);
+    List<Lunch> findByType(String type);
 }

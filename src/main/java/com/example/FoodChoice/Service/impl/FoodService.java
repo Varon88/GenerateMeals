@@ -60,7 +60,7 @@ public class FoodService implements FoodServiceImplementation {
                 saveUsedFood(dayFoodContainer);
                 return new ResponseEntity<>(dayFoodContainer, HttpStatus.OK);
             } else if (!condition && !day.equals(DayOfWeek.FRIDAY)){
-                List<BreakFast> vegBreakFast = breakFastdao.findbyType("Veg");
+                List<BreakFast> vegBreakFast = breakFastdao.findByType("Veg");
                 List<Lunch> vegLunch = lunchdao.findByType("Veg");
                 List<Dinner> vegDinner = dinnerdao.findByType("Veg");
 
