@@ -9,18 +9,15 @@ import com.example.FoodChoice.dao.BreakFastdao;
 import com.example.FoodChoice.dao.Dinnerdao;
 import com.example.FoodChoice.dao.LastDaysFooddao;
 import com.example.FoodChoice.dao.Lunchdao;
-import com.example.FoodChoice.dto.DayFood;
 import com.example.FoodChoice.dto.DayFoodContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
