@@ -9,10 +9,11 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.DayOfWeek;
 import java.util.List;
+import java.util.Optional;
 
 public interface FoodServiceImplementation {
 
-    ResponseEntity<List<DayFood>> foodSuggestions();
+    ResponseEntity<DayFoodContainer> foodSuggestions();
     int getBreakFastcount(List<BreakFast> breakFastList);
     int getLunchcount(List<Lunch> lunchList);
     int getDinnercount(List<Dinner> dinnerList);

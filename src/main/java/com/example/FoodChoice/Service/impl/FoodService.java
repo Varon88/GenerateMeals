@@ -3,6 +3,7 @@ package com.example.FoodChoice.Service.impl;
 import com.example.FoodChoice.Model.BreakFast;
 import com.example.FoodChoice.Model.Dinner;
 import com.example.FoodChoice.Model.Lunch;
+import com.example.FoodChoice.Model.PreviousDaysFood;
 import com.example.FoodChoice.Service.FoodServiceImplementation;
 import com.example.FoodChoice.dao.BreakFastdao;
 import com.example.FoodChoice.dao.Dinnerdao;
@@ -12,12 +13,14 @@ import com.example.FoodChoice.dto.DayFood;
 import com.example.FoodChoice.dto.DayFoodContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -35,28 +38,31 @@ public class FoodService implements FoodServiceImplementation {
 
 
     @Override
-    public ResponseEntity<List<DayFood>> foodSuggestions() {
+    public ResponseEntity<DayFoodContainer> foodSuggestions() {
         int bCount = getBreakFastcount(breakFastdao.findAll());
         int lCount = getLunchcount(lunchdao.findAll());
         int dCount = getDinnercount(dinnerdao.findAll());
 
-        Boolean condition = false;
+        Boolean condition = true;
         Random rnd = new Random();
 
 
-        while(condition == false) {
+        while(condition == true) {
             int breakFastid = rnd.nextInt(bCount);
             int lunchId = rnd.nextInt(lCount);
             int dinnerId = rnd.nextInt(dCount);
+            DayOfWeek day = getDay();
+            day = day.minus(1);
 
-            condition = lastDaysFooddao.checkIfUsed(breakFastdao.findById(breakFastid).get().getName(),"breakfast") && lastDaysFooddao.checkIfUsed(lunchdao.findById(lunchId).get().getName(), "lunch") && lastDaysFooddao.checkIfUsed(dinnerdao.findById(dinnerId).get().getName(),"dinner");
-            if(condition == true){
+            condition = lastDaysFooddao.existsByNameAndTypeAndDay(breakFastdao.findById(breakFastid).get().getName(),"breakfast",day) && lastDaysFooddao.existsByNameAndTypeAndDay(lunchdao.findById(lunchId).get().getName(), "lunch",day) && lastDaysFooddao.existsByNameAndTypeAndDay(dinnerdao.findById(dinnerId).get().getName(),"dinner",day);
+            if(condition == false){
                 DayFoodContainer dayFoodContainer = new DayFoodContainer(breakFastdao.findById(breakFastid),lunchdao.findById(lunchId),dinnerdao.findById(dinnerId));
                 saveUsedFood(dayFoodContainer);
+                return new ResponseEntity<>(dayFoodContainer, HttpStatus.OK);
             }
         }
 
-
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @Override
@@ -86,8 +92,13 @@ public class FoodService implements FoodServiceImplementation {
     @Override
     public void saveUsedFood(DayFoodContainer dayFoodContainer) {
         DayOfWeek day = getDay();
+        BreakFast breakFast = dayFoodContainer.getBreakFast().get();
+        Lunch lunch = dayFoodContainer.getLunch().get();
+        Dinner dinner = dayFoodContainer.getDinner().get();
 
-
+        lastDaysFooddao.save(new PreviousDaysFood(day, breakFast.getName(), "breakfast"));
+        lastDaysFooddao.save(new PreviousDaysFood(day, lunch.getName(), "lunch"));
+        lastDaysFooddao.save(new PreviousDaysFood(day, dinner.getName(), "dinner"));
     }
 
 
