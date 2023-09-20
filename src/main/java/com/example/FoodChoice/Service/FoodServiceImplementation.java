@@ -20,4 +20,5 @@ public interface FoodServiceImplementation {
     DayOfWeek getDay();
     void saveUsedFood(DayFoodContainer dayFoodContainer);
 
+
 }

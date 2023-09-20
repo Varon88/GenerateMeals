@@ -55,10 +55,26 @@ public class FoodService implements FoodServiceImplementation {
             day = day.minus(1);
 
             condition = lastDaysFooddao.existsByNameAndTypeAndDay(breakFastdao.findById(breakFastid).get().getName(),"breakfast",day) && lastDaysFooddao.existsByNameAndTypeAndDay(lunchdao.findById(lunchId).get().getName(), "lunch",day) && lastDaysFooddao.existsByNameAndTypeAndDay(dinnerdao.findById(dinnerId).get().getName(),"dinner",day);
-            if(condition == false){
+            if(condition == false && !day.equals(DayOfWeek.FRIDAY)){
                 DayFoodContainer dayFoodContainer = new DayFoodContainer(breakFastdao.findById(breakFastid),lunchdao.findById(lunchId),dinnerdao.findById(dinnerId));
                 saveUsedFood(dayFoodContainer);
                 return new ResponseEntity<>(dayFoodContainer, HttpStatus.OK);
+            } else if (!condition && !day.equals(DayOfWeek.FRIDAY)){
+                List<BreakFast> vegBreakFast = breakFastdao.findbyType("Veg");
+                List<Lunch> vegLunch = lunchdao.findByType("Veg");
+                List<Dinner> vegDinner = dinnerdao.findByType("Veg");
+
+                int vegBreakCount = rnd.nextInt(getBreakFastcount(vegBreakFast));
+                int vegLunchCount = rnd.nextInt(getLunchcount(vegLunch));
+                int vegDinnerCount = rnd.nextInt(getDinnercount(vegDinner));
+                boolean condition1 = true;
+
+                condition1 = lastDaysFooddao.existsByNameAndTypeAndDay(breakFastdao.findById(vegBreakCount).get().getName(),"breakfast",day) && lastDaysFooddao.existsByNameAndTypeAndDay(lunchdao.findById(vegLunchCount).get().getName(), "lunch",day) && lastDaysFooddao.existsByNameAndTypeAndDay(dinnerdao.findById(vegDinnerCount).get().getName(),"dinner",day);
+                if(!condition1 && day.equals(DayOfWeek.FRIDAY)) {
+                    DayFoodContainer dayFoodContainer = new DayFoodContainer(breakFastdao.findById(breakFastid), lunchdao.findById(lunchId), dinnerdao.findById(dinnerId));
+                    saveUsedFood(dayFoodContainer);
+                    return new ResponseEntity<>(dayFoodContainer, HttpStatus.OK);
+                }
             }
         }
 
