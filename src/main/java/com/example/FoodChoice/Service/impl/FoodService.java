@@ -9,6 +9,7 @@ import com.example.FoodChoice.dao.BreakFastdao;
 import com.example.FoodChoice.dao.Dinnerdao;
 import com.example.FoodChoice.dao.LastDaysFooddao;
 import com.example.FoodChoice.dao.Lunchdao;
+import com.example.FoodChoice.dto.DayFood;
 import com.example.FoodChoice.dto.DayFoodContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -112,6 +113,15 @@ public class FoodService implements FoodServiceImplementation {
         lastDaysFooddao.save(new PreviousDaysFood(day, breakFast.getName(), "breakfast"));
         lastDaysFooddao.save(new PreviousDaysFood(day, lunch.getName(), "lunch"));
         lastDaysFooddao.save(new PreviousDaysFood(day, dinner.getName(), "dinner"));
+    }
+
+    @Override
+    public ResponseEntity<DayFood> getALlFood() {
+        DayFood dayFood = new DayFood();
+        dayFood.setBreakFastList(breakFastdao.findAll());
+        dayFood.setLunchList(lunchdao.findAll());
+        dayFood.setDinnerList(dinnerdao.findAll());
+        return new ResponseEntity<>(dayFood, HttpStatus.OK);
     }
 
 

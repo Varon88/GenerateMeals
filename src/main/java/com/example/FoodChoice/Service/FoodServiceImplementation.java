@@ -3,6 +3,7 @@ package com.example.FoodChoice.Service;
 import com.example.FoodChoice.Model.BreakFast;
 import com.example.FoodChoice.Model.Dinner;
 import com.example.FoodChoice.Model.Lunch;
+import com.example.FoodChoice.dto.DayFood;
 import com.example.FoodChoice.dto.DayFoodContainer;
 import org.springframework.http.ResponseEntity;
 
@@ -19,4 +20,5 @@ public interface FoodServiceImplementation {
     void saveUsedFood(DayFoodContainer dayFoodContainer);
 
 
+    ResponseEntity<DayFood> getALlFood();
 }
